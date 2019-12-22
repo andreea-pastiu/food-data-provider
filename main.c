@@ -6,6 +6,7 @@
 #define MAX_DRINK_NAME 20
 #define MAX_LINE 10
 void readItem(char * specifficFood);
+void saveData(int noOfFood, int *noOfFoodTypes, char **food, char ***foodTypes, double **foodPrices, int noOfDrinks, char **drinks, int *drinkPrices);
 
 int main() {
     int noOfFoodTypes;
@@ -79,7 +80,7 @@ int main() {
         if(i < noOfDrinks -1)
             printf(", ");
     }
-
+    saveData(noOfFoodTypes,noOfSpecificFood, foodTypes, specifficFood, specifficFoodPrices, noOfDrinks, drinks, drinkPrices);
     for(int i=0; i < noOfFoodTypes; i++) {
         for(int j=0; j < noOfSpecificFood; j++) {
             free(specifficFood[i][j]);
@@ -100,6 +101,35 @@ int main() {
     free(noOfSpecificFood);
 
     return 0;
+}
+
+void saveData(int noOfFood, int *noOfFoodTypes, char **food, char ***foodTypes, double **foodPrices, int noOfDrinks, char **drinks, int *drinkPrices)
+{
+    FILE *outputPtr = fopen("data.txt", "w");
+    fprintf(outputPtr, "%d:\n", noOfFood);
+    for(int i= 0; i< noOfFood; i++)
+    {
+        fprintf(outputPtr, "%s %d: ", food[i], noOfFoodTypes[i]);
+        for(int j = 0; j< noOfFoodTypes[i]; j++)
+        {
+            fprintf(outputPtr, "(%s - %.2lf) ", foodTypes[i][j], foodPrices[i][j]);
+        }
+        fprintf(outputPtr, "\n");
+    }
+    fprintf(outputPtr, "%d:\n", noOfDrinks);
+    for(int i= 0; i< noOfDrinks; i++)
+    {
+        if(i != noOfDrinks - 1)
+        {
+            fprintf(outputPtr, "(%s - %d), ", drinks[i], drinkPrices[i]);
+        }
+        else
+        {
+            fprintf(outputPtr, "(%s - %d)\n", drinks[i], drinkPrices[i]);
+        }
+    }
+    if(outputPtr != NULL)
+        fclose(outputPtr);
 }
 
 void readItem(char * item) {
